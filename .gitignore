@@ -1,0 +1,6 @@
+exavis_copy/
+data/
+*.vtu
+*.vtr
+*.vts
+*.npy
