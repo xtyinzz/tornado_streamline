@@ -40,39 +40,39 @@ def get_streamline_data(slPD: vtk.vtkPolyData):
   print(f"Average Line lengths (# of points): {sl_lens.mean()}")
   return sls, sl_lens, ids, sl_points_pos, sl_points_id
 
-def get_streamline_data_iter(slPD: vtk.vtkPolyData, bounds=[0,0]):
-  sls = [0]*slPD.GetNumberOfCells()
-  ids = [0]*slPD.GetNumberOfCells()
-  sl_lens = np.zeros(slPD.GetNumberOfCells())
-  cellIter = slPD.NewCellIterator()
-  cellIter.InitTraversal()
-  for i in tqdm(range(slPD.GetNumberOfCells())):
-    sl = cellIter.GetPoints()
+# def get_streamline_data_iter(slPD: vtk.vtkPolyData, bounds=[0,0]):
+#   sls = [0]*slPD.GetNumberOfCells()
+#   ids = [0]*slPD.GetNumberOfCells()
+#   sl_lens = np.zeros(slPD.GetNumberOfCells())
+#   cellIter = slPD.NewCellIterator()
+#   cellIter.InitTraversal()
+#   for i in tqdm(range(slPD.GetNumberOfCells())):
+#     sl = cellIter.GetPoints()
 
-    sl = slPD.GetCell(i)
-    print(sl.GetArray('ReasonForTermination'))
-    points = sl.GetPoints()
-    # WHY? ISSUE: if don't do points_np.copy(), then all the streamline will be the same.
-    points_np = np.copy(numpy_support.vtk_to_numpy(points.GetData()))
+#     sl = slPD.GetCell(i)
+#     print(sl.GetArray('ReasonForTermination'))
+#     points = sl.GetPoints()
+#     # WHY? ISSUE: if don't do points_np.copy(), then all the streamline will be the same.
+#     points_np = np.copy(numpy_support.vtk_to_numpy(points.GetData()))
 
-    # DEBUG: check vtkPoints address and np address
-    # print(f'vtkPoints address: {hex(id(points.GetData()))}, numpy address: {hex(id(points_np))}', end="         start point coord : ")
-    # print(points_np[0])
+#     # DEBUG: check vtkPoints address and np address
+#     # print(f'vtkPoints address: {hex(id(points.GetData()))}, numpy address: {hex(id(points_np))}', end="         start point coord : ")
+#     # print(points_np[0])
 
-    if (points_np.max() > 47 or points_np.min() < 0):
-      print(f'For this streamline --- max coord: {points_np.max()}      min coord: {points_np.min()}')
+#     if (points_np.max() > 47 or points_np.min() < 0):
+#       print(f'For this streamline --- max coord: {points_np.max()}      min coord: {points_np.min()}')
     
-    id_np = i*np.ones((len(points_np), 1))
+#     id_np = i*np.ones((len(points_np), 1))
 
-    sl_lens[i] = len(points_np)
-    # print(f"Current streamline length: {sl_lens[i]}")
-    ids[i] = id_np
-    sls[i] = (points_np)
+#     sl_lens[i] = len(points_np)
+#     # print(f"Current streamline length: {sl_lens[i]}")
+#     ids[i] = id_np
+#     sls[i] = (points_np)
 
-  sl_points_pos = np.concatenate(sls)
-  sl_points_id = np.concatenate(ids)
-  print(f"Average Line lengths (# of points): {sl_lens.mean()}")
-  return sls, sl_lens, ids, sl_points_pos, sl_points_id
+#   sl_points_pos = np.concatenate(sls)
+#   sl_points_id = np.concatenate(ids)
+#   print(f"Average Line lengths (# of points): {sl_lens.mean()}")
+#   return sls, sl_lens, ids, sl_points_pos, sl_points_id
 
 # create a mesh matrix of shape (D1, ..., Di, #ofDim). Di = dimension i length
 def get_mesh(*dims):
